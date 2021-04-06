@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const slugify = require('slugify');
 
 const tourSchema = new mongoose.Schema({
   name: {
@@ -86,6 +87,13 @@ const tourSchema = new mongoose.Schema({
       day: Number,
     },
   ],
+});
+
+// document middleware runs before .save() and .create()
+// pre & post hooks are not executed on update(), findOneAndUpdate()
+tourSchema.pre('save', function (next) {
+  this.slug = slugify(this.name, { lower: true });
+  next();
 });
 
 const Tour = mongoose.model('Tour', tourSchema);
