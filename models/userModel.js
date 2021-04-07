@@ -47,18 +47,19 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+// crypto the password
 userSchema.pre('save', async function (next) {
   // run the function when the password is modified only
   if (!this.isModified('password')) return next();
   // hash the password
   this.password = await bcrypt.hash(this.password, 12);
-
   // delete passwordConfirm feild
   this.passwordConfirm = undefined;
-
+  // call the next function
   next();
 });
 
+// create a model
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
