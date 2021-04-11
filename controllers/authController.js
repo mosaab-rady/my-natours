@@ -90,6 +90,32 @@ exports.logOut = (req, res, next) => {
   res.status(200).json({ status: 'success' });
 };
 
+// update password
+exports.updatePassword = async (req, res, next) => {
+  try {
+    // get user document
+    const user = await User.findById(req.user.id).select('+password');
+    // compare the password
+    if (!(await bcrypt.compare(req.body.currentPassword, user.password))) {
+      return res.status(401).json({
+        status: 'fail',
+        data: 'your current password is wrong',
+      });
+    }
+    // update password
+    user.password = req.body.password;
+    user.passwordConfirm = req.body.passwordConfirm;
+    await user.save();
+    // log user in
+    createTokenSendCookie(user, 200, res);
+  } catch (err) {
+    res.status(400).json({
+      status: 'error',
+      data: err.message,
+    });
+  }
+};
+
 // protect middleware to make only looged in user open access the protected routes
 exports.protect = async (req, res, next) => {
   // check if there is a cookie in the req
@@ -106,11 +132,17 @@ exports.protect = async (req, res, next) => {
     process.env.JWT_SECRET,
     function (err, decoded) {
       if (err) {
-        return 0;
+        return 'invalid token';
       }
       return decoded;
     }
   );
+  if (decoded === 'invalid token') {
+    return res.status(401).json({
+      status: 'fail',
+      data: 'invalid token',
+    });
+  }
   // check if user still exist
   const user = await User.findById(decoded.id);
   if (!user) {

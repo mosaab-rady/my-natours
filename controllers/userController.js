@@ -1,5 +1,36 @@
 const User = require('../models/userModel');
 
+// update user name and email
+exports.updateMe = async (req, res, next) => {
+  // we will get the user from the protect route(req.user)
+  try {
+    //create error if user POSTs password data
+    if (req.body.password || req.body.passwordConfirm) {
+      return res.status(400).json({
+        status: 'fail',
+        data: 'this route is not for password update',
+      });
+    }
+    // update the user document
+    const updatedUser = await User.findByIdAndUpdate(req.user.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    // send the updated document
+    res.status(200).json({
+      status: 'success',
+      data: {
+        user: updatedUser,
+      },
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'error',
+      data: err.message,
+    });
+  }
+};
+
 // get all users
 exports.getAllUsers = async (req, res, next) => {
   try {

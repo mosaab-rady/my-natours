@@ -8,7 +8,12 @@ const router = express.Router();
 router.post('/signUp', authController.signUp);
 router.post('/logIn', authController.logIn);
 router.get('/logOut', authController.logOut);
-
+router.patch('/updateMe', authController.protect, userController.updateMe);
+router.patch(
+  '/updatePassword',
+  authController.protect,
+  authController.updatePassword
+);
 router.use(authController.protect, authController.restrictTo('admin'));
 router.get('/', userController.getAllUsers);
 router

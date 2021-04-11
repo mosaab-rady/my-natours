@@ -87,6 +87,7 @@ const tourSchema = new mongoose.Schema({
       day: Number,
     },
   ],
+  guides: [{ type: mongoose.Schema.ObjectId, ref: 'User' }],
 });
 
 // document middleware runs before .save() and .create()
