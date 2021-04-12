@@ -46,7 +46,7 @@ exports.getTourById = async (req, res, next) => {
     // get the tour id from the url params
     const { id } = req.params;
     // check if the tour exist and find it
-    const tour = await Tour.findById(id).populate('guides');
+    const tour = await Tour.findById(id).populate('guides').populate('reviews');
     if (!tour) {
       return res.status(404).json({
         status: 'fail',
