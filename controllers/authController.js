@@ -121,7 +121,7 @@ exports.protect = async (req, res, next) => {
   // check if there is a cookie in the req
   const token = req.cookies.jwt;
   if (!token) {
-    return res.status(401).json({
+    return res.json({
       status: 'fail',
       data: 'you are not logged in, please log in to get access',
     });
@@ -157,6 +157,7 @@ exports.protect = async (req, res, next) => {
 };
 
 // prevent normal users from accessing the admin routes
+// use protect first
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
     // check if the user have permission

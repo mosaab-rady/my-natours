@@ -14,7 +14,7 @@ exports.getAllTours = async (req, res, next) => {
       },
     });
   } catch (err) {
-    res.status(400).json({
+    res.json({
       status: 'error',
       data: err.message,
     });
@@ -33,7 +33,7 @@ exports.createTour = async (req, res, next) => {
       },
     });
   } catch (err) {
-    res.status(400).json({
+    res.json({
       status: 'error',
       data: err.message,
     });
