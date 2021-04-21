@@ -29,6 +29,6 @@ app.use(cookieParser());
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
-app.use('/public/img/tours', imageRouter);
+app.use('/public/img', imageRouter);
 
 module.exports = app;

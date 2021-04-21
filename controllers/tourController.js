@@ -48,9 +48,9 @@ exports.getTourById = async (req, res, next) => {
     // check if the tour exist and find it
     const tour = await Tour.findById(id).populate('guides').populate('reviews');
     if (!tour) {
-      return res.status(404).json({
+      return res.json({
         status: 'fail',
-        data: 'No document found with that ID',
+        data: 'No Tour found with that ID',
       });
     }
     res.status(200).json({
@@ -60,7 +60,7 @@ exports.getTourById = async (req, res, next) => {
       },
     });
   } catch (err) {
-    res.status(400).json({
+    res.json({
       status: 'error',
       data: err.message,
     });
