@@ -11,6 +11,10 @@ exports.getImage = (req, res, next) => {
     kind = 'users';
     fileName = req.params.userImage;
   }
+  if (req.params.logoImage) {
+    kind = '';
+    fileName = req.params.logoImage;
+  }
   const options = {
     root: path.join(__dirname, `../public/img/${kind}`),
     dotfiles: 'deny',
