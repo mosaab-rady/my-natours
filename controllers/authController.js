@@ -19,7 +19,7 @@ const createTokenSendCookie = (user, statusCode, res) => {
   };
   if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
   // send cookie
-  res.cookie('jwt', token, cookieOptions);
+  res.cookie('jwt-react', token, cookieOptions);
   // remove password from output
   user.password = undefined;
   // send the output
@@ -43,8 +43,8 @@ exports.signUp = async (req, res, next) => {
     // create token and send cookie to make the user log in after sign up
     createTokenSendCookie(newUser, 201, res);
   } catch (err) {
-    res.status(400).json({
-      status: 'error',
+    res.json({
+      status: 'fail',
       data: err.message,
     });
   }
@@ -119,7 +119,7 @@ exports.updatePassword = async (req, res, next) => {
 // protect middleware to make only looged in user open access the protected routes
 exports.protect = async (req, res, next) => {
   // check if there is a cookie in the req
-  const token = req.cookies.jwt;
+  const token = req.cookies.jwt_server;
   if (!token) {
     return res.json({
       status: 'fail',

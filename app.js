@@ -13,7 +13,7 @@ const app = express();
 
 // allow requests from front end
 // allow access from anywhere
-app.use(cors());
+app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 app.options('*', cors());
 
 // middleware for development logger
