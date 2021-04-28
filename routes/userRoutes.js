@@ -5,7 +5,12 @@ const { route } = require('./tourRoutes');
 
 const router = express.Router();
 
-router.post('/signUp', authController.signUp);
+router.post(
+  '/signUp',
+  userController.uploadUserPhoto,
+  userController.resizeUserPhoto,
+  authController.signUp
+);
 router.post('/logIn', authController.logIn);
 router.get('/logOut', authController.logOut);
 router.patch('/updateMe', authController.protect, userController.updateMe);

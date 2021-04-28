@@ -1,3 +1,5 @@
+const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 const bcrypt = require('bcryptjs');
@@ -31,55 +33,37 @@ const createTokenSendCookie = (user, statusCode, res) => {
 };
 
 // sign up
-exports.signUp = async (req, res, next) => {
-  try {
-    // create new user from the requested body
-    const newUser = await User.create({
-      name: req.body.name,
-      email: req.body.email,
-      password: req.body.password,
-      passwordConfirm: req.body.passwordConfirm,
-    });
-    // create token and send cookie to make the user log in after sign up
-    createTokenSendCookie(newUser, 201, res);
-  } catch (err) {
-    res.json({
-      status: 'fail',
-      data: err.message,
-    });
-  }
-};
+exports.signUp = catchAsync(async (req, res, next) => {
+  // create new user from the requested body
+  const form = {};
+  form.name = req.body.name;
+  form.email = req.body.email;
+  form.password = req.body.password;
+  form.passwordConfirm = req.body.passwordConfirm;
+  if (req.file) form.photo = req.file.filename;
+
+  const newUser = await User.create(form);
+  // create token and send cookie to make the user log in after sign up
+  createTokenSendCookie(newUser, 201, res);
+});
 
 // log in function
-exports.logIn = async (req, res, next) => {
-  try {
-    // getting the email and the password from the request body
-    const { email, password } = req.body;
-    // check if there are email and password
-    if (!email || !password) {
-      return res.status(400).json({
-        status: 'error',
-        data: 'Please provide email and password',
-      });
-    }
-    // get the user from the database and select the password
-    const user = await User.findOne({ email }).select('+password');
-    // checks if the email and password are correct
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-      return res.status(401).json({
-        status: 'error',
-        data: 'Incorrect email or password',
-      });
-    }
-    // create token and send coockie for the user
-    createTokenSendCookie(user, 200, res);
-  } catch (err) {
-    res.status(400).json({
-      status: 'error',
-      data: err.message,
-    });
+exports.logIn = catchAsync(async (req, res, next) => {
+  // getting the email and the password from the request body
+  const { email, password } = req.body;
+  // check if there are email and password
+  if (!email || !password) {
+    return next(new AppError('Please provide email and password.', 400));
   }
-};
+  // get the user from the database and select the password
+  const user = await User.findOne({ email }).select('+password');
+  // checks if the email and password are correct
+  if (!user || !(await bcrypt.compare(password, user.password))) {
+    return next(new AppError('Incorrect email or password.', 401));
+  }
+  // create token and send coockie for the user
+  createTokenSendCookie(user, 200, res);
+});
 
 // log out
 exports.logOut = (req, res, next) => {
@@ -91,40 +75,29 @@ exports.logOut = (req, res, next) => {
 };
 
 // update password
-exports.updatePassword = async (req, res, next) => {
-  try {
-    // get user document
-    const user = await User.findById(req.user.id).select('+password');
-    // compare the password
-    if (!(await bcrypt.compare(req.body.currentPassword, user.password))) {
-      return res.status(401).json({
-        status: 'fail',
-        data: 'your current password is wrong',
-      });
-    }
-    // update password
-    user.password = req.body.password;
-    user.passwordConfirm = req.body.passwordConfirm;
-    await user.save();
-    // log user in
-    createTokenSendCookie(user, 200, res);
-  } catch (err) {
-    res.status(400).json({
-      status: 'error',
-      data: err.message,
-    });
+exports.updatePassword = catchAsync(async (req, res, next) => {
+  // get user document
+  const user = await User.findById(req.user.id).select('+password');
+  // compare the password
+  if (!(await bcrypt.compare(req.body.currentPassword, user.password))) {
+    return next(new AppError('Your current password is wrong', 401));
   }
-};
+  // update password
+  user.password = req.body.password;
+  user.passwordConfirm = req.body.passwordConfirm;
+  await user.save();
+  // log user in
+  createTokenSendCookie(user, 200, res);
+});
 
 // protect middleware to make only looged in user open access the protected routes
-exports.protect = async (req, res, next) => {
+exports.protect = catchAsync(async (req, res, next) => {
   // check if there is a cookie in the req
   const token = req.cookies.jwt_server;
   if (!token) {
-    return res.json({
-      status: 'fail',
-      data: 'you are not logged in, please log in to get access',
-    });
+    return next(
+      new AppError('You are not logged in!! please log in to get access.', 401)
+    );
   }
   // verify the cookie
   const decoded = await jwt.verify(
@@ -138,23 +111,22 @@ exports.protect = async (req, res, next) => {
     }
   );
   if (decoded === 'invalid token') {
-    return res.status(401).json({
-      status: 'fail',
-      data: 'invalid token',
-    });
+    return next(new AppError('invalid token!.', 401));
   }
   // check if user still exist
   const user = await User.findById(decoded.id);
   if (!user) {
-    return res.status(401).json({
-      status: 'fail',
-      data: 'the user belong to this token does not exist',
-    });
+    return next(
+      new AppError(
+        'The user belonging to this token does no longer exist.',
+        401
+      )
+    );
   }
   // grant access to protected routes
   req.user = user;
   next();
-};
+});
 
 // prevent normal users from accessing the admin routes
 // use protect first
@@ -162,10 +134,9 @@ exports.restrictTo = (...roles) => {
   return (req, res, next) => {
     // check if the user have permission
     if (!roles.includes(req.user.role)) {
-      return res.status(403).json({
-        status: 'fail',
-        data: 'you do not have permission to perform this action',
-      });
+      return next(
+        new AppError('You do not have permission to perform this action.', 403)
+      );
     }
     // if yes call the next middleware
     next();

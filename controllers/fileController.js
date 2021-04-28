@@ -1,4 +1,5 @@
 const path = require('path');
+const AppError = require('../utils/appError');
 
 exports.getImage = (req, res, next) => {
   let kind;
@@ -26,10 +27,7 @@ exports.getImage = (req, res, next) => {
 
   res.sendFile(fileName, options, (err) => {
     if (err) {
-      res.status(404).json({
-        status: 'fail',
-        data: 'No Photo',
-      });
+      return next(new AppError('No photo found.', 404));
     }
   });
 };
