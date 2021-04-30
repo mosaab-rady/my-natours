@@ -21,7 +21,7 @@ const createTokenSendCookie = (user, statusCode, res) => {
   };
   if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
   // send cookie
-  res.cookie('jwt-react', token, cookieOptions);
+  res.cookie('jwt_server', token, cookieOptions);
   // remove password from output
   user.password = undefined;
   // send the output
@@ -67,8 +67,8 @@ exports.logIn = catchAsync(async (req, res, next) => {
 
 // log out
 exports.logOut = (req, res, next) => {
-  res.cookie('jwt', 'loggedout', {
-    expires: new Date(Date.now() + 10 * 1000),
+  res.cookie('jwt_server', 'loggedout', {
+    expires: new Date(Date.now()),
     httpOnly: true,
   });
   res.status(200).json({ status: 'success' });

@@ -11,16 +11,30 @@ router.post(
   userController.resizeUserPhoto,
   authController.signUp
 );
+
 router.post('/logIn', authController.logIn);
+
 router.get('/logOut', authController.logOut);
+
 router.patch('/updateMe', authController.protect, userController.updateMe);
+
 router.patch(
   '/updatePassword',
   authController.protect,
   authController.updatePassword
 );
-router.use(authController.protect, authController.restrictTo('admin'));
+
+router.use(authController.protect);
+
+router.get(
+  '/me',
+  authController.protect,
+  userController.getMe,
+  userController.getUserById
+);
+
 router.get('/', userController.getAllUsers);
+
 router
   .route('/:id')
   .get(userController.getUserById)
