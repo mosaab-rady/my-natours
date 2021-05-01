@@ -42,7 +42,12 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     return next(new AppError('This route is not for password update.', 400));
   }
   // update the user document
-  const updatedUser = await User.findByIdAndUpdate(req.user.id, req.body, {
+  const form = {};
+  form.name = req.body.name;
+  form.email = req.body.email;
+  if (req.file) form.photo = req.file.filename;
+
+  const updatedUser = await User.findByIdAndUpdate(req.user.id, form, {
     new: true,
     runValidators: true,
   });

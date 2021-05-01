@@ -16,7 +16,13 @@ router.post('/logIn', authController.logIn);
 
 router.get('/logOut', authController.logOut);
 
-router.patch('/updateMe', authController.protect, userController.updateMe);
+router.patch(
+  '/updateMe',
+  authController.protect,
+  userController.uploadUserPhoto,
+  userController.resizeUserPhoto,
+  userController.updateMe
+);
 
 router.patch(
   '/updatePassword',
@@ -26,12 +32,7 @@ router.patch(
 
 router.use(authController.protect);
 
-router.get(
-  '/me',
-  authController.protect,
-  userController.getMe,
-  userController.getUserById
-);
+router.get('/me', userController.getMe, userController.getUserById);
 
 router.get('/', userController.getAllUsers);
 
