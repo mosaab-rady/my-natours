@@ -12,6 +12,7 @@ exports.getTourUserIds = (req, res, next) => {
 exports.getAllReviews = catchAsync(async (req, res, next) => {
   let filter = {};
   if (req.params.tourId) filter = { tour: req.params.tourId };
+  if (req.params.userId) filter = { user: req.params.userId };
   // get all reviews and populate users (name,photo)
   const reviews = await Review.find(filter)
     .populate('user', 'name photo')
@@ -63,9 +64,12 @@ exports.createReview = catchAsync(async (req, res, next) => {
 // update review
 exports.updateReviewById = catchAsync(async (req, res, next) => {
   // 1) get review id
-  const { id } = req.params;
+  const { id } = req.params || req.body.id;
+  const body = {};
+  body.review = req.body.review;
+  body.rating = req.body.rating;
   // 2) update the review
-  const review = await Review.findByIdAndUpdate(id, req.body, {
+  const review = await Review.findByIdAndUpdate(id, body, {
     new: true,
     runValidators: true,
   })
