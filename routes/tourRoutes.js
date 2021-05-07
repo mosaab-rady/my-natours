@@ -10,12 +10,28 @@ router.use('/:tourId/reviews', reviewRouter);
 router
   .route('/')
   .get(tourController.getAllTours)
-  .post(tourController.createTour);
+  .post(
+    authController.protect,
+    authController.restrictTo('admin'),
+    tourController.uploadTourImages,
+    tourController.resizeTourImages,
+    tourController.createTour
+  );
 
 router
   .route('/:id')
   .get(tourController.getTourById)
-  .delete(tourController.deleteTourById)
-  .patch(tourController.updateTourById);
+  .delete(
+    authController.protect,
+    authController.restrictTo('admin'),
+    tourController.deleteTourById
+  )
+  .patch(
+    authController.protect,
+    authController.restrictTo('admin'),
+    tourController.uploadTourImages,
+    tourController.resizeTourImages,
+    tourController.updateTourById
+  );
 
 module.exports = router;

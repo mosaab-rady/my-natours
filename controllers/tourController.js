@@ -1,6 +1,60 @@
 const Tour = require('../models/tourModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const multer = require('multer');
+const sharp = require('sharp');
+
+const multerStorage = multer.memoryStorage();
+
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image')) {
+    cb(null, true);
+  } else {
+    cb(new AppError('Not an image! Please upload only images.', 400), false);
+  }
+};
+
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter,
+});
+
+exports.uploadTourImages = upload.fields([
+  { name: 'imageCover', maxCount: 1 },
+  { name: 'images', maxCount: 3 },
+]);
+
+exports.resizeTourImages = catchAsync(async (req, res, next) => {
+  if (!req.files) return next();
+
+  if (!req.files.imageCover || !req.files.images) return next();
+  // 1) Cover image
+  req.body.imageCover = `tour-${Date.now()}-cover.jpeg`;
+  await sharp(req.files.imageCover[0].buffer)
+    .resize(2000, 1333)
+    .toFormat('jpeg')
+    .jpeg({ quality: 90 })
+    .toFile(`public/img/tours/${req.body.imageCover}`);
+
+  // 2) Images
+  req.body.images = [];
+
+  await Promise.all(
+    req.files.images.map(async (file, i) => {
+      const filename = `tour-${Date.now()}-${i + 1}.jpeg`;
+
+      await sharp(file.buffer)
+        .resize(2000, 1333)
+        .toFormat('jpeg')
+        .jpeg({ quality: 90 })
+        .toFile(`public/img/tours/${filename}`);
+
+      req.body.images.push(filename);
+    })
+  );
+
+  next();
+});
 
 // get all tours
 exports.getAllTours = catchAsync(async (req, res, next) => {
@@ -19,7 +73,39 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
 // create new tour
 exports.createTour = catchAsync(async (req, res, next) => {
   // get the new tour info from the body
-  const tour = await Tour.create(req.body);
+  const form = {};
+  form.name = req.body.name;
+  form.duration = req.body.duration;
+  form.price = req.body.price;
+  form.maxGroupSize = req.body.maxGroupSize;
+  form.difficulty = req.body.difficulty;
+  form.summary = req.body.summary;
+  form.startDates = req.body.startDates;
+  form.description = req.body.description;
+  form.images = req.body.images;
+  form.imageCover = req.body.imageCover;
+
+  // we need to parse because the location are strings
+  const startLocation = JSON.parse(req.body.startLocation);
+  req.body.startLocation = startLocation;
+
+  let locations = req.body.locations;
+  // in case there only one location
+  if (typeof locations !== 'string') {
+    locations = locations.map((location) => JSON.parse(location));
+  }
+  if (typeof locations === 'string') {
+    locations = JSON.parse(locations);
+  }
+
+  req.body.locations = locations;
+
+  form.startLocation = req.body.startLocation;
+  form.locations = req.body.locations;
+
+  // console.log(form.locations[3].coordinates);
+
+  const tour = await Tour.create(form);
   res.status(201).json({
     status: 'success',
     data: {
@@ -68,7 +154,37 @@ exports.updateTourById = catchAsync(async (req, res, next) => {
   // get the tour id from the url params
   const { id } = req.params;
 
-  const tour = await Tour.findByIdAndUpdate(id, req.body, {
+  const form = {};
+  form.name = req.body.name;
+  form.duration = req.body.duration;
+  form.price = req.body.price;
+  form.maxGroupSize = req.body.maxGroupSize;
+  form.difficulty = req.body.difficulty;
+  form.summary = req.body.summary;
+  form.startDates = req.body.startDates;
+  form.description = req.body.description;
+  form.images = req.body.images;
+  form.imageCover = req.body.imageCover;
+
+  // we need to parse because the location are strings
+  const startLocation = JSON.parse(req.body.startLocation);
+  req.body.startLocation = startLocation;
+
+  let locations = req.body.locations;
+  // in case there only one location
+  if (typeof locations !== 'string') {
+    locations = locations.map((location) => JSON.parse(location));
+  }
+  if (typeof locations === 'string') {
+    locations = JSON.parse(locations);
+  }
+
+  req.body.locations = locations;
+
+  form.startLocation = req.body.startLocation;
+  form.locations = req.body.locations;
+
+  const tour = await Tour.findByIdAndUpdate(id, form, {
     new: true,
     runValidators: true,
   });
