@@ -37,11 +37,12 @@ router.use('/:userId/reviews', reviewRouter);
 
 router.get('/me', userController.getMe, userController.getUserById);
 
-router.get('/', userController.getAllUsers);
+router.get('/', authController.restrictTo('admin'), userController.getAllUsers);
 
 router
   .route('/:id')
   .get(userController.getUserById)
+  .patch(authController.restrictTo('admin'), userController.updateUserById)
   .delete(userController.deleteUserById);
 
 module.exports = router;

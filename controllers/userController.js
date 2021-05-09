@@ -3,6 +3,7 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const multer = require('multer');
 const sharp = require('sharp');
+const { findByIdAndUpdate } = require('../models/userModel');
 
 // upload user photo
 const multerStorage = multer.memoryStorage();
@@ -110,5 +111,30 @@ exports.deleteUserById = catchAsync(async (req, res, next) => {
   res.status(204).json({
     status: 'success',
     data: { user },
+  });
+});
+
+exports.updateUserById = catchAsync(async (req, res, next) => {
+  // get the id from the url params
+  const { id } = req.params;
+  // get the user from database
+  const user = await User.findById(id);
+  // check if the user exist
+  if (!user) {
+    return next(new AppError('No document found with that ID.', 404));
+  }
+  const role = req.body.role;
+  // update the user
+  const updatedUser = await User.findByIdAndUpdate(
+    id,
+    { role: role },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+  res.status(200).json({
+    status: 'success',
+    data: { updatedUser },
   });
 });
