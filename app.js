@@ -3,6 +3,7 @@ const path = require('path');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -10,8 +11,14 @@ const reviewRouter = require('./routes/reviewRoutes');
 const bookingRouter = require('./routes/bookingRoutes');
 const imageRouter = require('./routes/imageRoutes');
 const globalErrorHandler = require('./controllers/errorController');
+const bookingController = require('./controllers/bookingController');
+const { raw } = require('body-parser');
+const helmet = require('helmet');
 
 const app = express();
+
+// Set security HTTP headers
+app.use(helmet());
 
 // allow requests from front end
 // allow access from anywhere
@@ -20,6 +27,12 @@ app.options('*', cors());
 
 // middleware for development logger
 app.use(morgan('dev'));
+
+app.post(
+  '/webhook',
+  bodyParser.raw({ type: 'application/json' }),
+  bookingController.webhookCheckout
+);
 
 // parse staitc files, json files, url
 // app.use(express.static(path.join(__dirname, 'public')));
