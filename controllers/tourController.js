@@ -59,7 +59,7 @@ exports.resizeTourImages = catchAsync(async (req, res, next) => {
 // get all tours
 exports.getAllTours = catchAsync(async (req, res, next) => {
   // find all the tours in database
-  const tours = await Tour.find();
+  const tours = await Tour.find().populate('guides');
   // send the tours
   res.status(200).json({
     status: 'success',
@@ -102,6 +102,8 @@ exports.createTour = catchAsync(async (req, res, next) => {
 
   form.startLocation = req.body.startLocation;
   form.locations = req.body.locations;
+
+  form.guides = req.body.guides;
 
   // console.log(form.locations[3].coordinates);
 
@@ -161,10 +163,10 @@ exports.updateTourById = catchAsync(async (req, res, next) => {
   form.maxGroupSize = req.body.maxGroupSize;
   form.difficulty = req.body.difficulty;
   form.summary = req.body.summary;
-  form.startDates = req.body.startDates;
+  if (req.body.startDates) form.startDates = req.body.startDates;
   form.description = req.body.description;
-  form.images = req.body.images;
-  form.imageCover = req.body.imageCover;
+  if (req.body.images) form.images = req.body.images;
+  if (req.body.imageCover) form.imageCover = req.body.imageCover;
 
   // we need to parse because the location are strings
   const startLocation = JSON.parse(req.body.startLocation);
@@ -183,6 +185,8 @@ exports.updateTourById = catchAsync(async (req, res, next) => {
 
   form.startLocation = req.body.startLocation;
   form.locations = req.body.locations;
+
+  form.guides = req.body.guides;
 
   const tour = await Tour.findByIdAndUpdate(id, form, {
     new: true,

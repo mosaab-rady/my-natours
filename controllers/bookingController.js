@@ -1,13 +1,13 @@
-const stripe = require('stripe')(
-  'sk_test_51IpxicDPN2xmZKI6rt9bUn6aDLKbvep3ybXhTWu7SLG3ZKtHYLW4VdLbDkPcNAQAEaIAHIcWKwHZkC4IRqqeon4700St33C5cv'
-);
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const Booking = require('../models/bookingModel');
 const Tour = require('../models/tourModel');
+const User = require('../models/userModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 
 exports.getCheckOutSession = catchAsync(async (req, res, next) => {
   const tour = await Tour.findById(req.params.tourId);
+  if (!tour) next(new AppError('can not book tour that does not exist', 404));
 
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
@@ -38,42 +38,50 @@ exports.getCheckOutSession = catchAsync(async (req, res, next) => {
   });
 });
 
-const createBookingCheckout = catchAsync(async (session) => {
+const createBookingCheckout = async (session) => {
   const tour = session.client_reference_id;
   const user = (await User.findOne({ email: session.customer_email })).id;
-  const price = session.display_items[0].amount / 100;
+  const price = session.amount_total / 100;
   await Booking.create({ tour, user, price });
-});
+};
 
 exports.webhookCheckout = (req, res, next) => {
-  const endpointSecret = 'whsec_vSWID1VFryUb7t3AmK09GIvWwhgjFVGw';
+  const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
   const sig = req.headers['stripe-signature'];
 
   let event;
 
   try {
-    event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+    event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
   } catch (err) {
     res.status(400).send(`Webhook Error: ${err.message}`);
+    console.log(err);
   }
 
   // Handle the event
-  switch (event.type) {
-    case 'payment_intent.succeeded':
-      const paymentIntent = event.data.object;
-      console.log('PaymentIntent was successful!');
-      break;
-    case 'payment_method.attached':
-      const paymentMethod = event.data.object;
-      console.log('PaymentMethod was attached to a Customer!');
-      break;
-    // ... handle other event types
-    default:
-      console.log(`Unhandled event type ${event.type}`);
+  // switch (event.type) {
+  //   case 'payment_intent.succeeded':
+  //     const paymentIntent = event.data.object;
+  //     console.log(paymentIntent);
+  //     console.log('PaymentIntent was successful!');
+  //     break;
+  //   case 'payment_method.attached':
+  //     const paymentMethod = event.data.object;
+  //     console.log(paymentMethod);
+  //     console.log('PaymentMethod was attached to a Customer!');
+  //     break;
+  //   // ... handle other event types
+  //   default:
+  //     console.log(`Unhandled event type ${event.type}`);
+  // }
+
+  if (event.type === 'checkout.session.completed') {
+    // console.log(event.data.object);
+    createBookingCheckout(event.data.object);
   }
 
   // Return a response to acknowledge receipt of the event
-  res.json({ received: true });
+  res.status(200).json({ received: true });
 };
 
 exports.getMyBookings = catchAsync(async (req, res, next) => {

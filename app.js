@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const dotenv = require('dotenv').config({ path: `${__dirname}/config.env` });
 
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -12,7 +13,6 @@ const bookingRouter = require('./routes/bookingRoutes');
 const imageRouter = require('./routes/imageRoutes');
 const globalErrorHandler = require('./controllers/errorController');
 const bookingController = require('./controllers/bookingController');
-const { raw } = require('body-parser');
 const helmet = require('helmet');
 
 const app = express();
@@ -23,6 +23,19 @@ app.use(helmet());
 // allow requests from front end
 // allow access from anywhere
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+
+// const whitelist = ['http://localhost:3000', 'https://checkout.stripe.com'];
+// const corsOptionsDelegate = function (req, callback) {
+//   let corsOptions;
+//   if (whitelist.indexOf(req.header('Origin')) !== -1) {
+//     corsOptions = { origin: true }; // reflect (enable) the requested origin in the CORS response
+//   } else {
+//     corsOptions = { origin: false }; // disable CORS for this request
+//   }
+//   callback(null, corsOptions); // callback expects two parameters: error and options
+// };
+
+// app.use(cors(corsOptionsDelegate));
 app.options('*', cors());
 
 // middleware for development logger
