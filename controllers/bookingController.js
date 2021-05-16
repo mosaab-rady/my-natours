@@ -163,3 +163,14 @@ exports.deleteBookingById = catchAsync(async (req, res, next) => {
   });
 });
 exports.updateBookingById = catchAsync(async (req, res, next) => {});
+
+exports.hasBookedToor = catchAsync(async (req, res, next) => {
+  // get the user and tour
+  const user = req.user.id;
+  const tour = req.params.tourId;
+
+  const booking = await Booking.findOne({ user, tour });
+  if (!booking) return next(new AppError('please book the tour first', 400));
+
+  next();
+});

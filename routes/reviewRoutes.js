@@ -1,8 +1,17 @@
 const express = require('express');
 const authController = require('../controllers/authController');
 const reviewController = require('../controllers/reviewController');
+const bookingController = require('../controllers/bookingController');
 
 const router = express.Router({ mergeParams: true });
+
+router.post(
+  '/addreview/:tourId',
+  authController.protect,
+  reviewController.getTourUserIds,
+  bookingController.hasBookedToor,
+  reviewController.createReview
+);
 
 router
   .route('/')
