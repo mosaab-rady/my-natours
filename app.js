@@ -22,20 +22,10 @@ app.use(helmet());
 
 // allow requests from front end
 // allow access from anywhere
-app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+// app.use(cors({ credentials: true }));
+app.use(bodyParser.json());
+app.use(cors());
 
-// const whitelist = ['http://localhost:3000', 'https://checkout.stripe.com'];
-// const corsOptionsDelegate = function (req, callback) {
-//   let corsOptions;
-//   if (whitelist.indexOf(req.header('Origin')) !== -1) {
-//     corsOptions = { origin: true }; // reflect (enable) the requested origin in the CORS response
-//   } else {
-//     corsOptions = { origin: false }; // disable CORS for this request
-//   }
-//   callback(null, corsOptions); // callback expects two parameters: error and options
-// };
-
-// app.use(cors(corsOptionsDelegate));
 app.options('*', cors());
 
 // middleware for development logger
@@ -59,6 +49,11 @@ app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/bookings', bookingRouter);
 app.use('/public/img', imageRouter);
+
+app.use(express.static(path.join(__dirname, 'build')));
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
 app.use(globalErrorHandler);
 
