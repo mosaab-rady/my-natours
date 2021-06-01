@@ -64,7 +64,7 @@ app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/bookings', bookingRouter);
 app.use('/public/img', imageRouter);
 
-app.use(express.static('client/build'));
+app.use(express.static(path.join(__dirname, 'client/build')));
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
 });
