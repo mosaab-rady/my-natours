@@ -1,0 +1,107 @@
+.my-reviews {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 3rem;
+  padding: 4rem 1rem;
+}
+
+.my-reviews__review-container {
+  position: relative;
+  padding: 2rem;
+  width: 22rem;
+  border-radius: 5px;
+  box-shadow: 0 1.5rem 4rem rgb(0 0 0 / 25%);
+  background: #d4f8bb;
+  display: flex;
+  flex-direction: column;
+}
+
+@media screen and (max-width: 400px) {
+  .my-reviews__review-container {
+    width: 90%;
+    /* margin: 0 2rem; */
+  }
+}
+
+.my-reviews__review-container h1 {
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  background-image: linear-gradient(to right, #7dd56f, #28b487);
+  color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
+}
+
+.my-reviews__review-container textarea {
+  margin-bottom: 2rem;
+  font-size: 1.2rem;
+  font-family: 'Open Sans Condensed', sans-serif;
+  background-color: #f2f2f2;
+  border: none;
+  border-radius: 3px;
+  padding: 0.8rem;
+  /* overflow: hidden; */
+  height: auto;
+}
+
+.my-reviews__review-container textarea::-webkit-scrollbar {
+  display: none;
+}
+
+.my-reviews__review-container textarea {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.my-reviews__btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.my-reviews__review-container button {
+  /* width: 10rem; */
+  font-size: 1rem;
+  background-color: #55c57a;
+  border: 0;
+  color: #fff;
+  padding: 0.5rem 2rem;
+  border-radius: 4rem;
+  text-transform: uppercase;
+  /* margin: 0.5rem auto; */
+}
+.my-reviews__review-container button:hover {
+  transition: all 0.1s linear;
+  transform: translateY(-3px);
+}
+
+.review-star {
+  /* position: absolute;
+  bottom: 1rem; */
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.my-review__input {
+  width: 3.5rem;
+  border: 5px;
+}
+
+.loading {
+  height: 10rem;
+  width: 10rem;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  border-top: 5px solid #55c57a;
+  animation: loading 0.6s linear infinite;
+}
+
+@keyframes loading {
+  to {
+    transform: rotate(360deg);
+  }
+}

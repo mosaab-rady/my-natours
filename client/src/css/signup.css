@@ -1,0 +1,121 @@
+.signup-container {
+  margin: 5rem;
+  padding: 2rem 4rem;
+  width: 40rem;
+  background-color: white;
+  box-shadow: 0 1.5rem 4rem rgb(0 0 0 / 15%);
+}
+
+.signup-container__header {
+  font-size: 2rem;
+  text-transform: uppercase;
+  background-image: linear-gradient(to right, #7dd56f, #28b487);
+  color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
+}
+
+@media screen and (max-width: 725px) {
+  .signup-container {
+    margin: 5rem 0;
+    padding: 2rem;
+    width: 80%;
+  }
+  .signup-container__header {
+    font-size: 1.5rem;
+  }
+}
+
+.form__group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2rem;
+}
+
+label {
+  color: #777;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+input {
+  padding: 0.6rem;
+  font-size: 1.2rem;
+  border: 0;
+  border-radius: 5px;
+  background-color: #e2e2e2;
+  border-top: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s;
+  width: 100%;
+  color: inherit;
+  font-family: inherit;
+}
+
+input:focus:invalid {
+  border-bottom: 3px solid rgb(255, 94, 0);
+  outline: none;
+}
+input:focus:valid {
+  border-bottom: 3px solid #55c57a;
+  outline: none;
+}
+
+.signup__form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form__group-img {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.signup__photo {
+  height: 5rem;
+  width: 5rem;
+  margin-bottom: 2rem;
+  margin-right: 2rem;
+  border-radius: 50%;
+}
+
+.photo-btn {
+  cursor: pointer;
+  font-size: 1.2rem;
+  text-transform: capitalize;
+  color: #55c57a;
+  border-bottom: 1px solid #55c57a;
+  padding: 0 0.5rem;
+}
+
+.photo-btn:hover {
+  transition: all 0.1s linear;
+  transform: translateY(-3px);
+  box-shadow: 0 1rem 2rem rgb(230, 222, 222);
+  color: #f2f2f2;
+  background-color: #55c57a;
+}
+
+#photo {
+  display: none;
+}
+
+.signup-btn {
+  width: 9rem;
+  font-size: 1rem;
+  background-color: #55c57a;
+  border: 0;
+  color: #fff;
+  padding: 1rem 0rem;
+  border-radius: 4rem;
+  text-transform: uppercase;
+  margin-left: auto;
+}
+
+.signup-btn:hover {
+  transition: all 0.1s linear;
+  transform: translateY(-3px);
+  box-shadow: 0 1rem 2rem rgb(230, 222, 222);
+}

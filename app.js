@@ -22,7 +22,9 @@ app.use(helmet());
 
 // allow requests from front end
 // allow access from anywhere
-app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+if (process.env.NODE_ENV === 'development') {
+  app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+} else app.use(cors());
 
 // const whitelist = ['http://localhost:3000', 'https://checkout.stripe.com'];
 // const corsOptionsDelegate = function (req, callback) {
@@ -59,6 +61,11 @@ app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/bookings', bookingRouter);
 app.use('/public/img', imageRouter);
+
+app.use(express.static('client/build'));
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+});
 
 app.use(globalErrorHandler);
 

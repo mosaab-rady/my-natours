@@ -1,0 +1,16 @@
+.bookings-container {
+  padding: 5rem 3rem;
+  align-items: center;
+}
+
+@media screen and (max-width: 550px) {
+  .bookings-container {
+    padding: 5rem 1rem;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .bookings-container {
+    padding: 5rem 1rem;
+  }
+}
