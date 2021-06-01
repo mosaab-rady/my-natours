@@ -41,7 +41,9 @@ if (process.env.NODE_ENV === 'development') {
 app.options('*', cors());
 
 // middleware for development logger
-app.use(morgan('dev'));
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 
 app.post(
   '/webhook',
