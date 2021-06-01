@@ -19,8 +19,6 @@ export default function ManageBookings() {
     getAllBookings();
   }, []);
 
-  console.log(bookings);
-
   if (bookings) {
     if (bookings.length >= 1) {
       return (
