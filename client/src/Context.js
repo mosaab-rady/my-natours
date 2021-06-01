@@ -25,20 +25,30 @@ export default function Context({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    if (
-      document.cookie
-        .split(';')
-        .some((item) => item.trim().startsWith('jwt_server=')) &&
-      !state.currentUser
-    ) {
-      const getMe = async () => {
-        const response = await request('GET', '/api/v1/users/me');
-        if (response)
-          if (response.data.status === 'success')
-            dispatch({ type: 'LOGGED_IN', payload: response.data.data.user });
-      };
-      getMe();
-    }
+    // if (
+    //   document.cookie
+    //     .split(';')
+    //     .some((item) => item.trim().startsWith('jwt_server=')) &&
+    //   !state.currentUser
+    // ) {
+    //   const getMe = async () => {
+    //     const response = await request('GET', '/api/v1/users/me');
+    //     if (response)
+    //       if (response.data.status === 'success')
+    //         dispatch({ type: 'LOGGED_IN', payload: response.data.data.user });
+    //   };
+    //   getMe();
+    // }
+
+    const getMe = async () => {
+      const response = await request('GET', '/api/vi/users/isloggedin');
+      if (response) {
+        if (response.data.status === 'success') {
+          dispatch({ type: 'LOGGED_IN', payload: response.data.data.user });
+        }
+      }
+    };
+    getMe();
 
     const method = 'GET';
     const url = '/api/v1/tours';
@@ -54,7 +64,7 @@ export default function Context({ children }) {
       }
     };
     getTours();
-  }, [state.currentUser]);
+  }, []);
 
   return (
     <myContext.Provider value={{ ...state, dispatch }}>

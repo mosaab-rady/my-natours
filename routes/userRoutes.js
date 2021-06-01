@@ -35,6 +35,8 @@ router.use(authController.protect);
 
 router.use('/:userId/reviews', reviewRouter);
 
+router.get('/isloggedin', authController.isLoggedIn);
+
 router.get('/me', userController.getMe, userController.getUserById);
 
 router.get('/', authController.restrictTo('admin'), userController.getAllUsers);

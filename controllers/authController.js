@@ -21,7 +21,7 @@ const createTokenSendCookie = (user, statusCode, res) => {
   };
   if (process.env.NODE_ENV === 'production') {
     cookieOptions.secure = true;
-    // cookieOptions.httpOnly = true;
+    cookieOptions.httpOnly = true;
   }
   // send cookie
   res.cookie('jwt_server', token, cookieOptions);
@@ -145,3 +145,32 @@ exports.restrictTo = (...roles) => {
     next();
   };
 };
+
+exports.isLoggedIn = catchAsync(async (req, res, next) => {
+  if (req.cookies.jwt_server) {
+    const decoded = await jwt.verify(
+      req.cookies.jwt_server,
+      process.env.JWT_SECRET,
+      function (err, decoded) {
+        if (err) {
+          return 'invalid token';
+        }
+        return decoded;
+      }
+    );
+    const user = await User.findById(decoded.id);
+    if (!user) {
+      return next(
+        new AppError(
+          'The user belonging to this token does no longer exist.',
+          401
+        )
+      );
+    }
+    res.status(200).json({
+      status: 'success',
+      data: { user },
+    });
+  }
+  next();
+});
