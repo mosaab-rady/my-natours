@@ -32,10 +32,7 @@ export default function Context({ children }) {
       !state.currentUser
     ) {
       const getMe = async () => {
-        const response = await request(
-          'GET',
-          'http://localhost:5000/api/v1/users/me'
-        );
+        const response = await request('GET', '/api/v1/users/me');
         if (response)
           if (response.data.status === 'success')
             dispatch({ type: 'LOGGED_IN', payload: response.data.data.user });
