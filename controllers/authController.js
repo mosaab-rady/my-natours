@@ -21,7 +21,7 @@ const createTokenSendCookie = (user, statusCode, res) => {
   };
   if (process.env.NODE_ENV === 'production') {
     cookieOptions.secure = true;
-    cookieOptions.httpOnly = true;
+    // cookieOptions.httpOnly = true;
   }
   // send cookie
   res.cookie('jwt_server', token, cookieOptions);
