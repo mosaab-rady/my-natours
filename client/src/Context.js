@@ -41,7 +41,7 @@ export default function Context({ children }) {
     // }
 
     const getMe = async () => {
-      const response = await request('GET', '/api/vi/users/isloggedin');
+      const response = await request('GET', '/api/v1/users/isloggedin');
       if (response) {
         if (response.data.status === 'success') {
           dispatch({ type: 'LOGGED_IN', payload: response.data.data.user });
