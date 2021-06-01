@@ -22,9 +22,9 @@ app.use(helmet());
 
 // allow requests from front end
 // allow access from anywhere
-if (process.env.NODE_ENV === 'development') {
-  app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
-} else app.use(cors());
+if (process.env.NODE_ENV === 'production') {
+  app.use(cors());
+} else app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 
 // const whitelist = ['http://localhost:3000', 'https://checkout.stripe.com'];
 // const corsOptionsDelegate = function (req, callback) {
@@ -41,9 +41,9 @@ if (process.env.NODE_ENV === 'development') {
 app.options('*', cors());
 
 // middleware for development logger
-if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'));
-}
+// if (process.env.NODE_ENV === 'development') {
+//   app.use(morgan('dev'));
+// }
 
 app.post(
   '/webhook',
