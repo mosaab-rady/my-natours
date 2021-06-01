@@ -23,8 +23,12 @@ app.use(helmet());
 // allow requests from front end
 // allow access from anywhere
 if (process.env.NODE_ENV === 'production') {
-  app.use(cors());
-} else app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+  app.use(cors({ origin: true, credentials: true }));
+} else if (process.env.NODE_ENV === 'development') {
+  app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+}
+
+// app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 
 // const whitelist = ['http://localhost:3000', 'https://checkout.stripe.com'];
 // const corsOptionsDelegate = function (req, callback) {
@@ -57,18 +61,18 @@ app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
 
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-  );
-  if (req.method === 'OPTIONS') {
-    res.header('Access-Control-Allow-Methods', 'PUT, POST, DELETE, GET');
-    // return res.status(200).json({});
-  }
-  next();
-});
+// app.use((req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', '*');
+//   res.header(
+//     'Access-Control-Allow-Headers',
+//     'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+//   );
+//   if (req.method === 'OPTIONS') {
+//     res.header('Access-Control-Allow-Methods', 'PUT, POST, DELETE, GET');
+//     // return res.status(200).json({});
+//   }
+//   next();
+// });
 
 // Routes
 app.use('/api/v1/tours', tourRouter);
@@ -77,10 +81,12 @@ app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/bookings', bookingRouter);
 app.use('/public/img', imageRouter);
 
-app.use(express.static(path.join(__dirname, 'client/build')));
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '/client/build/index.html'));
-});
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, 'client/build')));
+  app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '/client/build/index.html'));
+  });
+}
 
 app.use(globalErrorHandler);
 
