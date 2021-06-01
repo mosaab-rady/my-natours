@@ -18,7 +18,7 @@ const helmet = require('helmet');
 const app = express();
 
 // Set security HTTP headers
-app.use(helmet());
+// app.use(helmet());
 
 // allow requests from front end
 // allow access from anywhere
