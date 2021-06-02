@@ -49,13 +49,12 @@ export default function Map({ locations }) {
         right: 100,
       },
     });
+    window.scrollTo({
+      top: 0,
+      behavior: 'auto',
+    });
 
     return () => map.remove();
-  });
-
-  window.scrollTo({
-    top: 0,
-    behavior: 'auto',
   });
 
   return (
