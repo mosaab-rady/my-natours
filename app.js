@@ -1,6 +1,5 @@
 const express = require('express');
 const path = require('path');
-// const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -45,9 +44,10 @@ if (process.env.NODE_ENV === 'production') {
 app.options('*', cors());
 
 // middleware for development logger
-// if (process.env.NODE_ENV === 'development') {
-//   app.use(morgan('dev'));
-// }
+if (process.env.NODE_ENV === 'development') {
+  const morgan = require('morgan');
+  app.use(morgan('dev'));
+}
 
 app.post(
   '/webhook',
