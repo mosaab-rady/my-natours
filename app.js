@@ -21,29 +21,29 @@ const app = express();
 if (process.env.NODE_ENV === 'production') {
   app.use(cors({ origin: true, credentials: true }));
   // Set security HTTP headers
-  app.use(
-    helmet({
-      contentSecurityPolicy: {
-        directives: {
-          defaultSrc: ["'self'"],
-          scriptSrc: [
-            "'self'",
-            "'unsafe-inline'",
-            'https://natours-mern-app.herokuapp.com',
-            'https://js.stripe.com/v3',
-          ],
-          styleSrc: [
-            "'self'",
-            'https://fonts.googleapis.com',
-            "'unsafe-inline'",
-            'https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.css',
-          ],
-          imgSrc: ["'self'", 'https://*.com'],
-          fontSrc: ["'self'", 'https://*.com', 'data:'],
-        },
-      },
-    })
-  );
+  // app.use(
+  //   helmet({
+  //     contentSecurityPolicy: {
+  //       directives: {
+  //         defaultSrc: ["'self'"],
+  //         scriptSrc: [
+  //           "'self'",
+  //           "'unsafe-inline'",
+  //           'https://natours-mern-app.herokuapp.com',
+  //           'https://js.stripe.com/v3',
+  //         ],
+  //         styleSrc: [
+  //           "'self'",
+  //           'https://fonts.googleapis.com',
+  //           "'unsafe-inline'",
+  //           'https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.css',
+  //         ],
+  //         imgSrc: ["'self'", 'https://*.com'],
+  //         fontSrc: ["'self'", 'https://*.com', 'data:'],
+  //       },
+  //     },
+  //   })
+  // );
 } else if (process.env.NODE_ENV === 'development') {
   app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 }
