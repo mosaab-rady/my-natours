@@ -16,8 +16,8 @@ exports.getCheckOutSession = catchAsync(async (req, res, next) => {
     // )}/api/v1/bookings/checkout-success/?tour=${tour._id}&user=${
     //   req.user.id
     // }&price=${tour.price}`,
-    success_url: `${req.protocol}://localhost:3000/myaccount`,
-    cancel_url: `${req.protocol}://localhost:3000/tour/${tour.slug}`,
+    success_url: `${req.protocol}://natours-mern-app.herokuapp.com/myaccount`,
+    cancel_url: `${req.protocol}://natours-mern-app.herokuapp.com/tour/${tour.slug}`,
     customer_email: req.user.email,
     client_reference_id: req.params.tourId,
     line_items: [
