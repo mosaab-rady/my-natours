@@ -16,13 +16,20 @@ const helmet = require('helmet');
 
 const app = express();
 
-// Set security HTTP headers
-// app.use(helmet());
-
 // allow requests from front end
 // allow access from anywhere
 if (process.env.NODE_ENV === 'production') {
   app.use(cors({ origin: true, credentials: true }));
+  // Set security HTTP headers
+  app.use(
+    helmet.contentSecurityPolicy({
+      useDefaults: true,
+      directives: {
+        'script-src': ["'self'", 'https://natours-mern-app.herokuapp.com'],
+        'style-src': null,
+      },
+    })
+  );
 } else if (process.env.NODE_ENV === 'development') {
   app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 }
