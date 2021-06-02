@@ -38,11 +38,7 @@ if (process.env.NODE_ENV === 'production') {
             "'unsafe-inline'",
             'https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.css',
           ],
-          imgSrc: [
-            "'self'",
-            'https://*.com',
-            `data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAQAAAAfQ//73v/+BiOh/AAA=`,
-          ],
+          imgSrc: ["'self'", 'https://*.com'],
           fontSrc: ["'self'", 'https://*.com', 'data:'],
         },
       },
