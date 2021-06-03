@@ -3,7 +3,7 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const multer = require('multer');
 const sharp = require('sharp');
-const { findByIdAndUpdate } = require('../models/userModel');
+const path = require('path');
 
 // upload user photo
 const multerStorage = multer.memoryStorage();
@@ -29,7 +29,7 @@ exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
     .resize(500, 500)
     .toFormat('jpeg')
     .jpeg({ quality: 90 })
-    .toFile(`public/img/users/${req.file.filename}`);
+    .toFile(path.join(__dirname, `../public/img/users/${req.file.filename}`));
 
   next();
 });
