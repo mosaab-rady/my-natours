@@ -4,9 +4,28 @@ const AppError = require('../utils/appError');
 const multer = require('multer');
 const sharp = require('sharp');
 const path = require('path');
-
+const gridFsStorage = require('multer-gridfs-storage');
+const mongoose = require('mongoose');
+const url = process.env.DATABASE;
 // upload user photo
-const multerStorage = multer.memoryStorage();
+
+// const multerStorage = multer.memoryStorage();
+// const connection = mongoose.connect(url, {
+//   useNewUrlParser: true,
+//   useCreateIndex: true,
+//   useFindAndModify: false,
+//   useUnifiedTopology: true,
+// });
+const multerStorage = new gridFsStorage({
+  url,
+  file: (req, file) => {
+    return {
+      filename: `user_${Date.now()}`,
+      bucketName: 'photos',
+    };
+  },
+  options: { useUnifiedTopology: true },
+});
 
 const multerFilter = (req, file, cb) => {
   if (file.mimetype.startsWith('image')) {
@@ -22,14 +41,15 @@ const upload = multer({
 exports.uploadUserPhoto = upload.single('photo');
 
 exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
-  if (!req.file) return next();
+  console.log(req.file.filename);
+  // if (!req.file) return next();
 
-  req.file.filename = `user-${Date.now()}.jpeg`;
-  const photoSharp = await sharp(req.file.buffer)
-    .resize(500, 500)
-    .toFormat('jpeg')
-    .jpeg({ quality: 90 })
-    .toFile(path.join(__dirname, `../public/img/users/${req.file.filename}`));
+  // req.file.filename = `user-${Date.now()}.jpeg`;
+  // const photoSharp = await sharp(req.file.buffer)
+  //   .resize(500, 500)
+  //   .toFormat('jpeg')
+  //   .jpeg({ quality: 90 })
+  //   .toFile(path.join(__dirname, `../public/img/users/${req.file.filename}`));
 
   next();
 });
