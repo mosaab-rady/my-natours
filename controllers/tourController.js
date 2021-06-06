@@ -4,7 +4,19 @@ const AppError = require('../utils/appError');
 const multer = require('multer');
 const sharp = require('sharp');
 
-const multerStorage = multer.memoryStorage();
+const url = process.env.DATABASE;
+const gridFsStorage = require('multer-gridfs-storage');
+
+const multerStorage = new gridFsStorage({
+  url,
+  file: (req, file) => {
+    return {
+      filename: `tour_${Date.now()}.jpeg`,
+      bucketName: 'photos',
+    };
+  },
+  options: { useUnifiedTopology: true },
+});
 
 const multerFilter = (req, file, cb) => {
   if (file.mimetype.startsWith('image')) {
@@ -27,31 +39,40 @@ exports.uploadTourImages = upload.fields([
 exports.resizeTourImages = catchAsync(async (req, res, next) => {
   if (!req.files) return next();
 
-  if (!req.files.imageCover || !req.files.images) return next();
-  // 1) Cover image
-  req.body.imageCover = `tour-${Date.now()}-cover.jpeg`;
-  await sharp(req.files.imageCover[0].buffer)
-    .resize(2000, 1333)
-    .toFormat('jpeg')
-    .jpeg({ quality: 90 })
-    .toFile(`public/img/tours/${req.body.imageCover}`);
+  console.log(req.files.imageCover[0].filename);
+  console.log({ images: req.files.images });
 
-  // 2) Images
-  req.body.images = [];
+  // // 1) Cover image
+  if (req.files.imageCover) {
+    req.body.imageCover = req.files.imageCover[0].filename;
+  }
 
-  await Promise.all(
-    req.files.images.map(async (file, i) => {
-      const filename = `tour-${Date.now()}-${i + 1}.jpeg`;
+  if (req.files.images) {
+    req.body.images = [];
+    req.files.images.map((img) => req.body.images.push(img.filename));
+  }
+  // await sharp(req.files.imageCover[0].buffer)
+  //   .resize(2000, 1333)
+  //   .toFormat('jpeg')
+  //   .jpeg({ quality: 90 })
+  //   .toFile(`public/img/tours/${req.body.imageCover}`);
 
-      await sharp(file.buffer)
-        .resize(2000, 1333)
-        .toFormat('jpeg')
-        .jpeg({ quality: 90 })
-        .toFile(`public/img/tours/${filename}`);
+  // // 2) Images
+  // req.body.images = [];
 
-      req.body.images.push(filename);
-    })
-  );
+  // await Promise.all(
+  //   req.files.images.map(async (file, i) => {
+  //     const filename = `tour-${Date.now()}-${i + 1}.jpeg`;
+
+  //     await sharp(file.buffer)
+  //       .resize(2000, 1333)
+  //       .toFormat('jpeg')
+  //       .jpeg({ quality: 90 })
+  //       .toFile(`public/img/tours/${filename}`);
+
+  //     req.body.images.push(filename);
+  //   })
+  // );
 
   next();
 });

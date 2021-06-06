@@ -2,10 +2,10 @@ const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const multer = require('multer');
-const sharp = require('sharp');
-const path = require('path');
+// const sharp = require('sharp');
+// const path = require('path');
 const gridFsStorage = require('multer-gridfs-storage');
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 const url = process.env.DATABASE;
 // upload user photo
 
@@ -20,7 +20,7 @@ const multerStorage = new gridFsStorage({
   url,
   file: (req, file) => {
     return {
-      filename: `user_${Date.now()}`,
+      filename: `user_${Date.now()}.jpeg`,
       bucketName: 'photos',
     };
   },
@@ -30,6 +30,8 @@ const multerStorage = new gridFsStorage({
 const multerFilter = (req, file, cb) => {
   if (file.mimetype.startsWith('image')) {
     cb(null, true);
+  } else {
+    cb(new AppError('Not an image! Please upload only images.', 400), false);
   }
 };
 
@@ -41,7 +43,6 @@ const upload = multer({
 exports.uploadUserPhoto = upload.single('photo');
 
 exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
-  console.log(req.file.filename);
   // if (!req.file) return next();
 
   // req.file.filename = `user-${Date.now()}.jpeg`;
