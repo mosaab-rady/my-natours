@@ -59,6 +59,10 @@ export default function UpdateTour({ id }) {
 
   const userGuides = users.filter((user) => guides.includes(user._id));
 
+  const changeText = () => {
+    document.getElementById('update-tour__btn').innerText = 'Updating...';
+  };
+
   return (
     <form
       className='create-tour-container'
@@ -415,7 +419,13 @@ export default function UpdateTour({ id }) {
           />
         </div>
       </div>
-      <button className='create-tour__btn'>update tour</button>
+      <button
+        className='create-tour__btn'
+        id='update-tour__btn'
+        onClick={changeText}
+      >
+        update tour
+      </button>
     </form>
   );
 }

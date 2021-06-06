@@ -253,6 +253,7 @@ textarea:focus:invalid {
   border-radius: 4rem;
   text-transform: uppercase;
   margin: 4rem 0 -2rem auto;
+  cursor: pointer;
 }
 
 .create-tour__btn:hover {
