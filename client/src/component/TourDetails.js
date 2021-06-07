@@ -128,7 +128,11 @@ function TourDetails() {
                   <div key={i} className='overview-box__group__el'>
                     <img
                       className='overview-box__group__el__img__user'
-                      src={`/public/img/users/${guide.photo}`}
+                      src={
+                        guide.photo === 'default.jpg'
+                          ? 'default.jpg'
+                          : `/public/img/users/${guide.photo}`
+                      }
                       alt={guide.name}
                     />
                     <p className='overview-box__group__el__p'>
