@@ -1,6 +1,7 @@
 const path = require('path');
 const AppError = require('../utils/appError');
 const mongoose = require('mongoose');
+const sharp = require('sharp');
 const url = process.env.DATABASE;
 
 const connect = mongoose.createConnection(url, {
@@ -47,7 +48,8 @@ exports.getImage = (req, res, next) => {
             message: 'no files available',
           });
         }
-        gfs.openDownloadStreamByName(fileName).pipe(res);
+        if (fileName.startsWith('tour')) {
+        } else gfs.openDownloadStreamByName(fileName).pipe(res);
       });
     };
     findImgs();
