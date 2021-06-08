@@ -49,6 +49,7 @@ exports.getImage = (req, res, next) => {
           });
         }
         if (fileName.startsWith('tour')) {
+          gfs.openDownloadStreamByName(fileName).pipe(res);
         } else gfs.openDownloadStreamByName(fileName).pipe(res);
       });
     };
