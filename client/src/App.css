@@ -2,6 +2,10 @@
   margin: 0;
   box-sizing: border-box;
 }
+
+button {
+  cursor: pointer;
+}
 /* app */
 .App {
   line-height: 2;
