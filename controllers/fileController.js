@@ -41,16 +41,16 @@ exports.getImage = (req, res, next) => {
   if (req.params.filename) {
     fileName = req.params.filename;
     const findImgs = async () => {
-      await gfs.find({ filename: fileName }).toArray((err, files) => {
-        if (!files[0] || files.length === 0) {
-          return res.status(200).json({
-            status: 'success',
-            message: 'no files available',
-          });
-        }
-        if (fileName.startsWith('tour')) {
-          gfs.openDownloadStreamByName(fileName).pipe(res);
-        } else gfs.openDownloadStreamByName(fileName).pipe(res);
+      await new Promise((resolve) => {
+        gfs.find({ filename: fileName }).toArray((err, files) => {
+          if (!files[0] || files.length === 0) {
+            return res.status(200).json({
+              status: 'success',
+              message: 'no files available',
+            });
+          }
+          resolve(gfs.openDownloadStreamByName(fileName).pipe(res));
+        });
       });
     };
     findImgs();
