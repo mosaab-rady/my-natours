@@ -4,6 +4,7 @@
   justify-content: center;
   gap: 3rem;
   padding: 4rem 1rem;
+  margin-bottom: 3rem;
 }
 
 .my-reviews__review-container {
@@ -60,6 +61,7 @@
   gap: 1rem;
   justify-content: center;
   margin-top: 2rem;
+  margin-bottom: 1rem;
 }
 
 .my-reviews__review-container button {

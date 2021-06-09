@@ -42,8 +42,8 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-
   gap: 3rem;
+  margin-bottom: 3rem;
 }
 
 .my-reviews__review-container {
