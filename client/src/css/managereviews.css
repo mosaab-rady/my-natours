@@ -43,7 +43,7 @@
   flex-wrap: wrap;
   justify-content: center;
 
-  gap: 3rem;
+  margin: 3rem;
 }
 
 .my-reviews__review-container {
