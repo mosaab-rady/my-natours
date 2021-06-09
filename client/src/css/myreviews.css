@@ -2,7 +2,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  margin: 3rem;
+  gap: 3rem;
   padding: 4rem 1rem;
 }
 
@@ -57,7 +57,7 @@
 .my-reviews__btns {
   display: flex;
   flex-wrap: wrap;
-  margin: 1rem;
+  gap: 1rem;
   justify-content: center;
   margin-top: 2rem;
 }

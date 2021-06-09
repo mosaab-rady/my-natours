@@ -1,7 +1,7 @@
 const path = require('path');
 const AppError = require('../utils/appError');
 const mongoose = require('mongoose');
-const sharp = require('sharp');
+// const sharp = require('sharp');
 const url = process.env.DATABASE;
 
 const connect = mongoose.createConnection(url, {
