@@ -4,7 +4,6 @@
   justify-content: center;
   gap: 3rem;
   padding: 4rem 1rem;
-  margin-bottom: 3rem;
 }
 
 .my-reviews__review-container {
@@ -16,6 +15,7 @@
   background: #d4f8bb;
   display: flex;
   flex-direction: column;
+  margin-bottom: 3rem;
 }
 
 @media screen and (max-width: 400px) {
@@ -61,7 +61,6 @@
   gap: 1rem;
   justify-content: center;
   margin-top: 2rem;
-  margin-bottom: 1rem;
 }
 
 .my-reviews__review-container button {
@@ -73,6 +72,7 @@
   padding: 0.5rem 2rem;
   border-radius: 4rem;
   text-transform: uppercase;
+  margin-bottom: 1rem;
   /* margin: 0.5rem auto; */
 }
 .my-reviews__review-container button:hover {
