@@ -4,7 +4,7 @@
   display: flex;
   width: auto;
   min-height: 150vh;
-  background-color: rgb(228, 245, 224);
+  background-color: rgb(234, 243, 232);
   box-shadow: 0 1.5rem 4rem rgb(0 0 0 / 15%);
   border-radius: 5px;
 }
