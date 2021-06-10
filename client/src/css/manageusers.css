@@ -15,7 +15,7 @@
   display: flex;
   flex-direction: column;
   margin-bottom: 4rem;
-  border: 1px solid rgb(221, 248, 220);
+  border: 1px solid rgb(241, 255, 240);
 }
 
 .users-container___user label {
