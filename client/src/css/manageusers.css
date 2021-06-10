@@ -9,7 +9,7 @@
 .users-container___user {
   padding: 2rem;
   width: 20rem;
-  background: #f3ffeb;
+  background: #f9fff5;
   box-shadow: 0 1.5rem 4rem rgb(212, 212, 212);
   border-radius: 5px;
   display: flex;
@@ -73,8 +73,9 @@
 }
 
 .update-user__form__options {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(10rem, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
 }
 
 .update-role__radio-group {
@@ -112,6 +113,7 @@
   text-transform: uppercase;
   margin: 0 auto;
   cursor: pointer;
+  margin-bottom: 1rem;
 }
 
 /* .update-user__btn {

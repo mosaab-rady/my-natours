@@ -63,7 +63,7 @@ export default function ManageUsers() {
                   <img
                     // className='signup__photo'
                     className='user-container__user__header__img'
-                    src={`http://localhost:5000/public/img/users/${user.photo}`}
+                    src={`/public/img/users/${user.photo}`}
                     alt={user.name.split(' ')[0]}
                   />
                   <h2>{user.name}</h2>
