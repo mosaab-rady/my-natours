@@ -42,13 +42,14 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+
   gap: 3rem;
 }
 
 .my-reviews__review-container {
   width: 22rem;
-  box-shadow: 0 1.5rem 4rem rgb(0 0 0 / 15%);
-  margin-bottom: 3rem;
+  box-shadow: 0 1.5rem 4rem rgb(212, 212, 212);
+  border: 1px solid rgb(221, 248, 220);
 }
 
 .manage-reviews__container button {

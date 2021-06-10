@@ -9,12 +9,20 @@
 .users-container___user {
   padding: 2rem;
   width: 20rem;
-  background: #f9fff5;
-  box-shadow: 0 1.5rem 4rem rgb(182, 202, 189);
+  background: #f3ffeb;
+  box-shadow: 0 1.5rem 4rem rgb(212, 212, 212);
   border-radius: 5px;
   display: flex;
   flex-direction: column;
   margin-bottom: 4rem;
+  border: 1px solid rgb(221, 248, 220);
+}
+
+.users-container___user label {
+  /* text-transform: capitalize; */
+  background-image: linear-gradient(to right, #7dd56f, #28b487);
+  color: transparent;
+  background-clip: text;
 }
 
 @media screen and (max-width: 500px) {
@@ -27,9 +35,29 @@
   }
 }
 
+.user-container__user__email,
+.user-container__user__role {
+  margin-bottom: 1rem;
+}
+
 .user-container__user__header {
   display: flex;
   align-items: center;
+  margin-bottom: 1rem;
+}
+
+.user-container__user__header h2 {
+  text-transform: capitalize;
+  background-image: linear-gradient(to right, #7dd56f, #28b487);
+  color: transparent;
+  background-clip: text;
+}
+
+.user-container__user__header__img {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  margin-right: 2rem;
 }
 
 .update-role {
@@ -44,10 +72,20 @@
   flex-direction: column;
 }
 
+.update-user__form__options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(10rem, 1fr));
+}
+
 .update-role__radio-group {
   display: flex;
   align-items: center;
-  margin-left: 2rem;
+  /* margin-left: 2rem; */
+}
+
+.update-role__radio-group label {
+  font-size: 1rem;
+  color: rgb(136, 136, 136);
 }
 
 .update-role__radio-group input {
@@ -74,7 +112,6 @@
   text-transform: uppercase;
   margin: 0 auto;
   cursor: pointer;
-  margin-bottom: 1rem;
 }
 
 /* .update-user__btn {
